@@ -1,0 +1,486 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Contact | Cereburum</title>
+    
+    <!-- Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&family=Oswald:wght@500;700&display=swap" rel="stylesheet">
+
+    <style>
+        /* --- 1. SHARED VARIABLES & RESET --- */
+        :root {
+            --bg-dark: #0f1014;
+            --bg-card: #1a1c23;
+            --text-white: #ffffff;
+            --text-muted: #9ca3af;
+            --font-heading: 'Oswald', sans-serif;
+            --font-body: 'Inter', sans-serif;
+            --ease-out: cubic-bezier(0.215, 0.61, 0.355, 1);
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+
+        body {
+            background-color: var(--bg-dark);
+            color: var(--text-white);
+            font-family: var(--font-body);
+            overflow-x: hidden;
+            -webkit-font-smoothing: antialiased;
+        }
+
+        a { text-decoration: none; color: inherit; transition: 0.3s; }
+        ul { list-style: none; }
+        img { display: block; max-width: 100%; height: auto; }
+
+        /* --- 2. UTILITIES & ANIMATIONS --- */
+        .container {
+            max-width: 1440px;
+            margin: 0 auto;
+            padding: 0 40px;
+        }
+
+        .reveal {
+            opacity: 0;
+            transform: translateY(30px);
+            transition: all 0.8s var(--ease-out);
+        }
+        .reveal.active {
+            opacity: 1;
+            transform: translateY(0);
+        }
+        .reveal-delay-1 { transition-delay: 0.1s; }
+        .reveal-delay-2 { transition-delay: 0.2s; }
+        .reveal-delay-3 { transition-delay: 0.3s; }
+
+        /* --- 3. NAVIGATION --- */
+        .navbar {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 20px 40px;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            z-index: 1000;
+            background: rgba(15, 16, 20, 0.9);
+            backdrop-filter: blur(12px);
+            border-bottom: 1px solid rgba(255,255,255,0.05);
+        }
+
+        .logo {
+            font-family: var(--font-heading);
+            font-size: 1.8rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: -0.5px;
+            color: #fff;
+        }
+
+        .nav-links { display: flex; gap: 40px; }
+        .nav-links a {
+            font-size: 0.8rem;
+            text-transform: uppercase;
+            font-weight: 600;
+            letter-spacing: 1px;
+            color: rgba(255,255,255,0.6);
+            position: relative;
+        }
+        .nav-links a:hover, .nav-links a.active { color: #fff; }
+        .nav-links a::after {
+            content: ''; position: absolute; bottom: -5px; left: 0; width: 0%; height: 2px;
+            background: #fff; transition: 0.3s var(--ease-out);
+        }
+        .nav-links a:hover::after, .nav-links a.active::after { width: 100%; }
+
+        .cart-btn {
+            background: #fff;
+            color: #000;
+            padding: 10px 24px;
+            border-radius: 100px;
+            font-weight: 700;
+            font-size: 0.8rem;
+            text-transform: uppercase;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            cursor: pointer;
+            transition: transform 0.2s;
+        }
+        .cart-btn:hover { transform: scale(1.05); }
+
+        /* --- 4. HEADER --- */
+        .page-header {
+            padding-top: 200px;
+            padding-bottom: 80px;
+            background: linear-gradient(to bottom, #131418, var(--bg-dark));
+            text-align: center;
+        }
+        .header-content h1 {
+            font-family: var(--font-heading);
+            font-size: clamp(3rem, 7vw, 7rem);
+            text-transform: uppercase;
+            line-height: 0.9;
+            margin-bottom: 25px;
+        }
+        .header-content p {
+            font-size: 1.2rem;
+            color: var(--text-muted);
+            max-width: 600px;
+            margin: 0 auto;
+            line-height: 1.6;
+        }
+
+        /* --- 5. DIRECT CONTACT CARDS --- */
+        .contact-methods {
+            padding-bottom: 100px;
+            border-bottom: 1px solid rgba(255,255,255,0.05);
+        }
+
+        .methods-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 30px;
+            margin-top: 60px;
+        }
+
+        .method-card {
+            background: var(--bg-card);
+            padding: 50px 40px;
+            border-radius: 16px;
+            border: 1px solid rgba(255,255,255,0.05);
+            text-align: center;
+            transition: 0.3s;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .method-card:hover {
+            transform: translateY(-10px);
+            border-color: rgba(255,255,255,0.2);
+            box-shadow: 0 20px 40px rgba(0,0,0,0.4);
+        }
+
+        .method-icon {
+            font-size: 2rem;
+            margin-bottom: 20px;
+            color: #fff;
+        }
+
+        .method-card h3 {
+            font-family: var(--font-heading);
+            font-size: 1.5rem;
+            text-transform: uppercase;
+            margin-bottom: 15px;
+            color: #fff;
+        }
+
+        .method-card p {
+            color: var(--text-muted);
+            font-size: 0.95rem;
+            margin-bottom: 25px;
+            line-height: 1.5;
+        }
+
+        .btn-link {
+            display: inline-block;
+            color: #fff;
+            font-weight: 700;
+            text-transform: uppercase;
+            font-size: 0.9rem;
+            letter-spacing: 1px;
+            border-bottom: 1px solid rgba(255,255,255,0.3);
+            padding-bottom: 5px;
+        }
+        .btn-link:hover { border-color: #fff; }
+
+        /* --- 6. REGIONAL HUBS --- */
+        .hubs-section { padding: 100px 0; }
+        
+        .section-title {
+            margin-bottom: 60px;
+            font-family: var(--font-heading);
+            font-size: 2.5rem;
+            text-transform: uppercase;
+        }
+
+        .hubs-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 40px;
+        }
+
+        .hub-card {
+            display: flex;
+            background: #111;
+            border-radius: 12px;
+            overflow: hidden;
+            border: 1px solid #222;
+        }
+
+        .hub-img {
+            width: 45%;
+            position: relative;
+        }
+        .hub-img img { width: 100%; height: 100%; object-fit: cover; filter: grayscale(100%); transition: 0.4s; }
+        .hub-card:hover .hub-img img { filter: grayscale(0%); }
+
+        .hub-details { padding: 40px; display: flex; flex-direction: column; justify-content: center; width: 55%; }
+        .hub-details h4 { font-family: var(--font-heading); font-size: 1.5rem; text-transform: uppercase; margin-bottom: 15px; color: #fff;}
+        .hub-details address {
+            color: var(--text-muted);
+            font-style: normal;
+            font-size: 0.95rem;
+            line-height: 1.6;
+            margin-bottom: 20px;
+        }
+
+        /* --- 7. FAQ --- */
+        .faq-wrapper {
+            max-width: 900px;
+            margin: 0 auto;
+            padding: 80px 0;
+            border-top: 1px solid rgba(255,255,255,0.05);
+        }
+
+        .faq-item {
+            border-bottom: 1px solid rgba(255,255,255,0.1);
+            padding: 30px 0;
+        }
+        .faq-item:last-child { border-bottom: none; }
+
+        .faq-item h5 {
+            font-size: 1.2rem;
+            color: #fff;
+            margin-bottom: 10px;
+            font-weight: 500;
+        }
+        .faq-item p {
+            color: var(--text-muted);
+            line-height: 1.6;
+        }
+
+        /* --- FOOTER --- */
+        footer {
+            border-top: 1px solid #222;
+            padding: 80px 0;
+            text-align: center;
+            color: #555;
+            background: #0b0c0f;
+        }
+
+        /* RESPONSIVE */
+        @media (max-width: 1024px) {
+            .methods-grid { grid-template-columns: 1fr; }
+            .hubs-grid { grid-template-columns: 1fr; }
+        }
+        @media (max-width: 768px) {
+            .nav-links { display: none; }
+            .header-content h1 { font-size: 3.5rem; }
+            .hub-card { flex-direction: column; }
+            .hub-img, .hub-details { width: 100%; }
+            .hub-img { height: 200px; }
+        }
+    </style>
+</head>
+<body>
+
+    <!-- NAVIGATION -->
+    <nav class="navbar">
+        <a href="index.html" class="logo">
+            Cereburum
+        </a>
+        <div class="nav-links">
+            <a href="#">Court Nets</a>
+            <a href="#">Batting Cages</a>
+            <a href="#">Custom Sizes</a>
+            <a href="projects.html">Projects</a>
+            <a href="contact.html" class="active">Contact</a>
+        </div>
+        <div class="cart-btn">
+            Inquiry <div style="width:6px; height:6px; background:var(--bg-dark); border-radius:50%;"></div>
+        </div>
+    </nav>
+
+    <!-- HEADER -->
+    <header class="page-header">
+        <div class="container header-content reveal active">
+            <h1>Global Reach<br>Local Support</h1>
+            <p>We are engineered for performance and built for service. Connect with the department that suits your needs below.</p>
+        </div>
+    </header>
+
+    <!-- DIRECT METHODS -->
+    <section class="container contact-methods">
+        <div class="methods-grid">
+            
+            <!-- Sales -->
+            <div class="method-card reveal reveal-delay-1">
+                <div class="method-icon">✦</div>
+                <h3>Sales & Quotes</h3>
+                <p>For new projects, custom sizing, and bulk orders for stadiums or clubs.</p>
+                <a href="mailto:sales@cereburum.com" class="btn-link">sales@cereburum.com</a>
+                <br>
+                <span style="display:block; margin-top:10px; font-size:0.8rem; color:#666;">+44 20 7946 0123</span>
+            </div>
+
+            <!-- Support -->
+            <div class="method-card reveal reveal-delay-2">
+                <div class="method-icon">●</div>
+                <h3>Technical Support</h3>
+                <p>For installation guides, warranty claims, or maintenance questions.</p>
+                <a href="mailto:support@cereburum.com" class="btn-link">support@cereburum.com</a>
+                <br>
+                <span style="display:block; margin-top:10px; font-size:0.8rem; color:#666;">Mon-Fri: 9am - 6pm GMT</span>
+            </div>
+
+            <!-- Corporate -->
+            <div class="method-card reveal reveal-delay-3">
+                <div class="method-icon">■</div>
+                <h3>Press & Partners</h3>
+                <p>For distribution inquiries, sponsorships, and media relations.</p>
+                <a href="mailto:partners@cereburum.com" class="btn-link">partners@cereburum.com</a>
+            </div>
+
+        </div>
+    </section>
+
+    <!-- REGIONAL HUBS -->
+    <section class="container hubs-section">
+        <h2 class="section-title reveal">Regional Hubs</h2>
+
+        <div class="hubs-grid">
+            
+            <!-- Hub 1 -->
+            <div class="hub-card reveal reveal-delay-1">
+                <div class="hub-img">
+                    <!-- Config ID: hub-1 -->
+                    <img id="hub-1" src="" alt="London Office">
+                </div>
+                <div class="hub-details">
+                    <h4>London HQ</h4>
+                    <address>
+                        128 Industrial Park Blvd<br>
+                        Manufacturing Sector 4<br>
+                        London, UK, SW1A 1AA
+                    </address>
+                    <a href="#" style="font-size:0.85rem; color:#fff; text-decoration:underline;">View on Map ↗</a>
+                </div>
+            </div>
+
+            <!-- Hub 2 -->
+            <div class="hub-card reveal reveal-delay-2">
+                <div class="hub-img">
+                    <!-- Config ID: hub-2 -->
+                    <img id="hub-2" src="" alt="Dubai Office">
+                </div>
+                <div class="hub-details">
+                    <h4>Dubai Office</h4>
+                    <address>
+                        Unit 404, Building 6<br>
+                        Dubai Design District<br>
+                        Dubai, UAE
+                    </address>
+                    <a href="#" style="font-size:0.85rem; color:#fff; text-decoration:underline;">View on Map ↗</a>
+                </div>
+            </div>
+
+            <!-- Hub 3 -->
+            <div class="hub-card reveal reveal-delay-1">
+                <div class="hub-img">
+                    <!-- Config ID: hub-3 -->
+                    <img id="hub-3" src="" alt="NY Office">
+                </div>
+                <div class="hub-details">
+                    <h4>New York</h4>
+                    <address>
+                        880 West 24th Street<br>
+                        Chelsea, NY 10011<br>
+                        United States
+                    </address>
+                    <a href="#" style="font-size:0.85rem; color:#fff; text-decoration:underline;">View on Map ↗</a>
+                </div>
+            </div>
+
+            <!-- Hub 4 -->
+            <div class="hub-card reveal reveal-delay-2">
+                <div class="hub-img">
+                    <!-- Config ID: hub-4 -->
+                    <img id="hub-4" src="" alt="Mumbai Office">
+                </div>
+                <div class="hub-details">
+                    <h4>Mumbai Unit</h4>
+                    <address>
+                        Plot C-30, Block G<br>
+                        Bandra Kurla Complex<br>
+                        Mumbai, India
+                    </address>
+                    <a href="#" style="font-size:0.85rem; color:#fff; text-decoration:underline;">View on Map ↗</a>
+                </div>
+            </div>
+
+        </div>
+    </section>
+
+    <!-- FAQ -->
+    <section class="container faq-wrapper reveal">
+        <h2 style="font-family: var(--font-heading); font-size: 2rem; text-transform: uppercase; margin-bottom:30px; text-align:center;">Frequently Asked Questions</h2>
+        
+        <div class="faq-item">
+            <h5>What are your standard lead times?</h5>
+            <p>Ready-made nets ship within 24 hours. Custom dimensions typically require 3-5 business days for manufacturing before dispatch.</p>
+        </div>
+        <div class="faq-item">
+            <h5>Do you provide installation services?</h5>
+            <p>We provide comprehensive installation guides and video tutorials. For large stadium projects, we can recommend certified contractors in your region.</p>
+        </div>
+        <div class="faq-item">
+            <h5>Where can I find spec sheets?</h5>
+            <p>Technical data sheets (TDS) regarding knot strength, UV resistance, and material composition are available upon request via our Support email.</p>
+        </div>
+    </section>
+
+    <!-- FOOTER -->
+    <footer>
+        <div class="container">
+            <a href="index.html" class="logo" style="color: #fff; display: block; margin-bottom: 20px;">Cereburum</a>
+            <p>&copy; 2026 Cereburum Inc. Global Supplier of Sport Nets.</p>
+        </div>
+    </footer>
+
+    <!-- SCRIPTS -->
+    <script>
+        const images = {
+            hub1: "https://images.unsplash.com/photo-1486406146926-c627a92ad1ab?q=80&w=2070&auto=format&fit=crop",
+            hub2: "https://images.unsplash.com/photo-1512453979798-5ea904f92580?q=80&w=2070&auto=format&fit=crop",
+            hub3: "https://images.unsplash.com/photo-1496442226666-8d4a0e62e6e9?q=80&w=2070&auto=format&fit=crop",
+            hub4: "https://images.unsplash.com/photo-1570125909232-eb263c188f7e?q=80&w=2071&auto=format&fit=crop"
+        };
+
+        window.addEventListener('DOMContentLoaded', () => {
+            document.getElementById('hub-1').src = images.hub1;
+            document.getElementById('hub-2').src = images.hub2;
+            document.getElementById('hub-3').src = images.hub3;
+            document.getElementById('hub-4').src = images.hub4;
+        });
+
+        function reveal() {
+            var reveals = document.querySelectorAll(".reveal");
+            for (var i = 0; i < reveals.length; i++) {
+                var windowHeight = window.innerHeight;
+                var elementTop = reveals[i].getBoundingClientRect().top;
+                var elementVisible = 50;
+                if (elementTop < windowHeight - elementVisible) {
+                    reveals[i].classList.add("active");
+                }
+            }
+        }
+        window.addEventListener("scroll", reveal);
+        reveal();
+    </script>
+</body>
+</html>
