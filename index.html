@@ -1,0 +1,858 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cereburum | Intelligent Sport Nets</title>
+    
+    <!-- Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&family=Oswald:wght@500;700&display=swap" rel="stylesheet">
+
+    <style>
+        /* --- 1. VARIABLES & RESET --- */
+        :root {
+            --bg-dark: #0f1014;
+            --bg-card: #1a1c23;
+            --text-white: #ffffff;
+            --text-muted: #9ca3af;
+            --font-heading: 'Oswald', sans-serif;
+            --font-body: 'Inter', sans-serif;
+            --ease-out: cubic-bezier(0.215, 0.61, 0.355, 1);
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+
+        body {
+            background-color: var(--bg-dark);
+            color: var(--text-white);
+            font-family: var(--font-body);
+            overflow-x: hidden;
+            -webkit-font-smoothing: antialiased;
+        }
+
+        a { text-decoration: none; color: inherit; transition: 0.3s; }
+        ul { list-style: none; }
+        img { display: block; max-width: 100%; height: auto; user-select: none; }
+
+        /* --- 2. UTILITIES & ANIMATIONS --- */
+        .container {
+            max-width: 1440px;
+            margin: 0 auto;
+            padding: 0 40px;
+        }
+
+        .reveal {
+            opacity: 0;
+            transform: translateY(40px);
+            transition: all 0.8s var(--ease-out);
+        }
+        .reveal.active {
+            opacity: 1;
+            transform: translateY(0);
+        }
+        .reveal-delay-1 { transition-delay: 0.1s; }
+        .reveal-delay-2 { transition-delay: 0.2s; }
+        .reveal-delay-3 { transition-delay: 0.3s; }
+
+        /* --- 3. NAVIGATION --- */
+        .navbar {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 20px 40px;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            z-index: 1000;
+            background: rgba(15, 16, 20, 0.8);
+            backdrop-filter: blur(12px);
+            border-bottom: 1px solid rgba(255,255,255,0.05);
+        }
+
+        .logo {
+            font-family: var(--font-heading);
+            font-size: 1.8rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: -0.5px;
+            color: #fff;
+        }
+
+        .nav-links { display: flex; gap: 40px; }
+        .nav-links a {
+            font-size: 0.8rem;
+            text-transform: uppercase;
+            font-weight: 600;
+            letter-spacing: 1px;
+            color: rgba(255,255,255,0.6);
+            position: relative;
+        }
+        .nav-links a:hover { color: #fff; }
+        .nav-links a::after {
+            content: ''; position: absolute; bottom: -5px; left: 0; width: 0%; height: 2px;
+            background: #fff; transition: 0.3s var(--ease-out);
+        }
+        .nav-links a:hover::after { width: 100%; }
+
+        .cart-btn {
+            background: #fff;
+            color: #000;
+            padding: 10px 24px;
+            border-radius: 100px;
+            font-weight: 700;
+            font-size: 0.8rem;
+            text-transform: uppercase;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            cursor: pointer;
+            transition: transform 0.2s;
+        }
+        .cart-btn:hover { transform: scale(1.05); }
+
+        /* --- 4. HERO SECTION (WITH DYNAMIC GIF) --- */
+        .hero {
+            position: relative;
+            height: 100vh;
+            min-height: 800px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            overflow: hidden;
+            /* Default fallback color */
+            background-color: #000; 
+        }
+
+        /* The Background Layer that holds the GIF/Image */
+        #hero-bg-layer {
+            position: absolute;
+            top: 0; left: 0; width: 100%; height: 100%;
+            background-size: cover;
+            background-position: center;
+            opacity: 0.6; /* Dim the gif so text pops */
+            z-index: 1;
+        }
+        
+        /* Dark Gradient Overlay on top of GIF */
+        .hero::after {
+            content: '';
+            position: absolute;
+            top: 0; left: 0; width: 100%; height: 100%;
+            background: linear-gradient(to bottom, rgba(15,16,20,0.4), var(--bg-dark));
+            z-index: 1;
+        }
+
+        .hero-text-layer {
+            position: absolute;
+            z-index: 2;
+            text-align: center;
+            width: 100%;
+            top: 50%;
+            transform: translateY(-50%);
+        }
+
+        .hero h1 {
+            font-family: var(--font-heading);
+            font-size: clamp(5rem, 16vw, 15rem); 
+            line-height: 0.85;
+            text-transform: uppercase;
+            color: rgba(255,255,255,0.95);
+            text-shadow: 0 20px 50px rgba(0,0,0,0.8);
+            letter-spacing: -4px;
+            mix-blend-mode: overlay; 
+        }
+
+        /* Text Outline Effect */
+        .hero h1::after {
+            content: 'NETS FOR\A CHAMPIONS';
+            white-space: pre;
+            position: absolute;
+            top: 0; left: 0; width: 100%;
+            color: transparent;
+            -webkit-text-stroke: 2px rgba(255,255,255,0.3);
+            z-index: -1;
+        }
+
+        .hero-cta {
+            position: absolute;
+            z-index: 3;
+            top: 60%;
+            right: 12%;
+            max-width: 350px;
+            animation: fadeInRight 1s 0.5s backwards;
+            background: rgba(0,0,0,0.6); 
+            backdrop-filter: blur(10px);
+            padding: 25px;
+            border-left: 3px solid #fff;
+            border-radius: 0 10px 10px 0;
+        }
+
+        .hero-cta p {
+            font-size: 0.95rem;
+            color: #e5e7eb;
+            margin-bottom: 25px;
+            line-height: 1.6;
+            font-weight: 300;
+        }
+
+        .btn-main {
+            background: var(--text-white);
+            color: var(--bg-dark);
+            padding: 14px 35px;
+            border-radius: 4px;
+            font-weight: 700;
+            display: inline-block;
+            font-size: 0.9rem;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            transition: all 0.3s;
+            border: 1px solid transparent;
+        }
+
+        .btn-main:hover {
+            background: transparent;
+            color: #fff;
+            border-color: #fff;
+            transform: translateY(-3px);
+        }
+
+        /* --- 5. TESTIMONIALS --- */
+        .testimonials { padding: 120px 0; }
+
+        .section-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-end;
+            margin-bottom: 60px;
+            border-bottom: 1px solid rgba(255,255,255,0.1);
+            padding-bottom: 20px;
+        }
+
+        .section-header h2 {
+            font-family: var(--font-heading);
+            font-size: clamp(2rem, 5vw, 4rem);
+            text-transform: uppercase;
+        }
+
+        .section-header p {
+            max-width: 400px;
+            font-size: 0.95rem;
+            color: var(--text-muted);
+            text-align: right;
+            line-height: 1.5;
+        }
+
+        .reviews-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+            gap: 30px;
+        }
+
+        .review-card {
+            background: linear-gradient(145deg, #1a1c23, #131418);
+            padding: 40px;
+            border-radius: 16px;
+            border: 1px solid rgba(255,255,255,0.03);
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            min-height: 280px;
+            transition: transform 0.3s, border-color 0.3s;
+        }
+        .review-card:hover {
+            transform: translateY(-10px);
+            border-color: rgba(255,255,255,0.1);
+            box-shadow: 0 20px 40px rgba(0,0,0,0.3);
+        }
+
+        .review-date { font-size: 0.8rem; color: #555; margin-bottom: 20px; font-weight: 500;}
+        .review-text { font-size: 1.1rem; line-height: 1.6; margin-bottom: 30px; color: #e5e5e5; font-style: italic;}
+        
+        .user-profile { display: flex; align-items: center; gap: 15px; }
+        .avatar { width: 50px; height: 50px; border-radius: 50%; background-color: #333; background-size: cover; background-position: center; border: 2px solid rgba(255,255,255,0.1);}
+        .user-info h4 { font-size: 1rem; font-weight: 600; color: #fff; }
+        .user-info span { font-size: 0.8rem; color: var(--text-muted); }
+
+        /* --- 6. PREMIUM NETS GRID --- */
+        .premium-section {
+            padding: 100px 0;
+            background: #0b0c0f;
+        }
+
+        .premium-grid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            grid-template-rows: auto auto; 
+            gap: 20px;
+        }
+
+        .grid-header {
+            grid-column: span 2;
+            padding: 40px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+        }
+        .grid-header h2 {
+            font-family: var(--font-heading);
+            font-size: 3.5rem;
+            line-height: 1;
+            margin: 10px 0 20px 0;
+            text-transform: uppercase;
+        }
+
+        .grid-item {
+            background: #ffffff;
+            border-radius: 16px;
+            position: relative;
+            padding: 20px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            overflow: hidden;
+            transition: transform 0.4s var(--ease-out);
+            cursor: pointer;
+        }
+        .grid-item:hover { transform: translateY(-8px); box-shadow: 0 15px 30px rgba(0,0,0,0.2); }
+        .grid-item img { max-width: 100%; max-height: 180px; object-fit: contain; transition: transform 0.4s;}
+        .grid-item:hover img { transform: scale(1.05); }
+
+        .item-tall {
+            grid-column: span 1;
+            grid-row: span 2;
+            padding: 0;
+            background: #000;
+        }
+        .item-tall img {
+            width: 100%; height: 100%; object-fit: cover;
+            opacity: 0.7;
+            transition: opacity 0.3s;
+        }
+        .item-tall:hover img { opacity: 1; }
+        .item-tall span {
+            position: absolute; bottom: 20px; left: 20px;
+            color: white; font-weight: 700; font-size: 1.2rem;
+            z-index: 2;
+        }
+
+        .item-dark {
+            background: #16181d;
+            border: 1px solid #333;
+            color: #fff;
+        }
+        .item-dark:hover { background: #fff; color: #000; }
+
+        /* --- 7. TOURNAMENT GRADE SECTION --- */
+        .world-cup-wrapper { padding: 50px 0; }
+        .wc-card {
+            background: #eef1f5;
+            color: #111;
+            border-radius: 40px;
+            position: relative;
+            height: 700px;
+            overflow: hidden;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .wc-content {
+            padding: 60px;
+            z-index: 10;
+            display: flex;
+            justify-content: space-between;
+        }
+        .wc-content h3 { font-family: var(--font-heading); font-size: 2.5rem; line-height: 1; text-transform: uppercase; margin-top: 10px; }
+        .wc-content p { max-width: 300px; font-size: 0.9rem; color: #555; line-height: 1.5; }
+
+        .wc-bg-text {
+            position: absolute;
+            top: 50%; left: 50%;
+            transform: translate(-50%, -50%);
+            font-size: 25vw;
+            font-weight: 800;
+            color: #d1d5db;
+            line-height: 0;
+            z-index: 1;
+            pointer-events: none;
+            opacity: 0.4;
+        }
+
+        .wc-players {
+            position: absolute;
+            bottom: 0; left: 0; width: 100%; height: 85%;
+            z-index: 2;
+            pointer-events: none;
+            display: flex;
+            justify-content: space-between;
+            padding: 0 5%;
+        }
+        .player-1 {
+            height: 90%;
+            filter: drop-shadow(10px 0 20px rgba(0,0,0,0.1));
+        }
+        .player-2 {
+            height: 90%;
+            filter: grayscale(100%) contrast(1.2);
+            transform: scaleX(-1);
+        }
+
+        .wc-badge {
+            position: absolute;
+            bottom: 10%; left: 50%;
+            transform: translateX(-50%);
+            background: #000;
+            color: #fff;
+            padding: 30px 50px;
+            border-radius: 20px;
+            z-index: 20;
+            text-align: center;
+            box-shadow: 0 20px 50px rgba(0,0,0,0.3);
+        }
+        .wc-badge h2 {
+            font-family: var(--font-heading);
+            font-size: 3rem;
+            line-height: 0.9;
+            text-transform: uppercase;
+        }
+
+        /* --- 8. BEST SELLERS --- */
+        .best-sellers { padding: 100px 0; }
+        
+        .products-grid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 25px;
+            align-items: end;
+        }
+
+        .product-card-wrap {
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+        }
+
+        .product-img-box {
+            background: #fff;
+            border-radius: 24px;
+            position: relative;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+            transition: 0.3s;
+            overflow: hidden;
+        }
+        .product-img-box:hover { transform: translateY(-5px); }
+        .product-img-box img { 
+            max-width: 95%; max-height: 95%; 
+            transition: 0.4s var(--ease-out);
+        }
+        .product-card-wrap:hover .product-img-box img { transform: scale(1.08); }
+
+        .h-medium { height: 280px; }
+        .h-small { height: 220px; }
+        .h-tall { height: 350px; }
+        .h-full { height: 420px; background: transparent; padding: 0; }
+        .h-full img { width: 100%; height: 100%; object-fit: cover; border-radius: 24px; }
+
+        .product-meta {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 0 5px;
+        }
+        .product-meta h5 { font-size: 0.9rem; color: #888; font-weight: 400; }
+        .product-meta .price { font-size: 1.1rem; font-weight: 600; color: #fff; display: block; }
+        
+        .btn-buy {
+            background: #222;
+            color: #fff;
+            padding: 8px 20px;
+            border-radius: 20px;
+            font-size: 0.75rem;
+            border: 1px solid #333;
+            transition: 0.2s;
+        }
+        .btn-buy:hover { background: #fff; color: #000; }
+
+        /* --- 9. FOOTER --- */
+        footer {
+            border-top: 1px solid #222;
+            padding: 80px 0;
+            margin-top: 60px;
+            text-align: center;
+            color: #555;
+            background: #0b0c0f;
+        }
+
+        /* --- RESPONSIVE --- */
+        @media (max-width: 1024px) {
+            .hero h1 { font-size: 14vw; }
+            .premium-grid { grid-template-columns: 1fr 1fr; }
+            .grid-header { grid-column: span 2; }
+            .item-tall { display: none; }
+            .products-grid { grid-template-columns: repeat(2, 1fr); }
+            .wc-bg-text { font-size: 40vw; }
+        }
+
+        @media (max-width: 768px) {
+            .nav-links { display: none; }
+            .hero { flex-direction: column; justify-content: flex-end; padding-bottom: 80px;}
+            .hero-text-layer { top: 30%; transform: translateY(0); }
+            .hero-cta { position: relative; right: auto; top: auto; margin-top: 30px; width: 90%; border-left: none; border-top: 3px solid #fff; background: rgba(0,0,0,0.6);}
+            
+            .section-header { flex-direction: column; align-items: flex-start; gap: 20px; }
+            .premium-grid { display: flex; flex-direction: column; }
+            .wc-card { height: 600px; }
+            .wc-content { flex-direction: column; gap: 20px; padding: 30px; }
+            .wc-players { opacity: 0.3; } 
+            .wc-badge { width: 90%; padding: 20px; }
+            .products-grid { grid-template-columns: 1fr; }
+        }
+
+        @keyframes fadeInRight {
+            from { opacity: 0; transform: translateX(20px); }
+            to { opacity: 1; transform: translateX(0); }
+        }
+    </style>
+</head>
+<body>
+
+    <!-- NAVIGATION -->
+    <nav class="navbar">
+        <a href="#" class="logo">
+            Cereburum
+        </a>
+        <div class="nav-links">
+            <a href="#">Court Nets</a>
+            <a href="#">Batting Cages</a>
+            <a href="#">Custom Sizes</a>
+            <a href="#">Projects</a>
+            <a href="#">Contact</a>
+        </div>
+        <div class="cart-btn">
+            Inquiry <div style="width:6px; height:6px; background:var(--bg-dark); border-radius:50%;"></div>
+        </div>
+    </nav>
+
+    <!-- HERO SECTION -->
+    <header class="hero">
+        <div id="hero-bg-layer"></div> <!-- This is where the GIF is injected via script -->
+        
+        <div class="hero-text-layer">
+            <h1 class="reveal active">NETS FOR<br>CHAMPIONS</h1>
+        </div>
+        
+        <div class="hero-cta reveal reveal-delay-2">
+            <p><strong>Cereburum</strong> engineers high-tenacity nets for Badminton, Cricket, Volleyball, Tennis, and Paddle. From Wimbledon specs to IPL batting cages.</p>
+            <a href="#" class="btn-main">View Catalog</a>
+        </div>
+    </header>
+
+    <!-- TESTIMONIALS -->
+    <section class="testimonials container">
+        <div class="section-header reveal">
+            <h2>Trusted by Clubs</h2>
+            <p>Our nets endure the hardest smashes and the toughest weather. See why stadiums and academies choose Cereburum.</p>
+        </div>
+
+        <div class="reviews-grid">
+            <div class="review-card reveal reveal-delay-1">
+                <div>
+                    <div class="review-date">January 10, 2024</div>
+                    <p class="review-text">"The custom cricket cage nets we ordered are phenomenal. They handle professional bowling speeds without any wear and tear."</p>
+                </div>
+                <div class="user-profile">
+                    <!-- Config ID: review-1-img -->
+                    <div class="avatar" id="review-1-img"></div> 
+                    <div class="user-info">
+                        <h4>David Miller</h4>
+                        <span>Cricket Academy Coach</span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="review-card reveal reveal-delay-2">
+                <div>
+                    <div class="review-date">February 05, 2024</div>
+                    <p class="review-text">"Replacing our tennis court nets with Cereburum was the best decision. The double-layered top mesh is exactly what we needed."</p>
+                </div>
+                <div class="user-profile">
+                    <!-- Config ID: review-2-img -->
+                    <div class="avatar" id="review-2-img"></div>
+                    <div class="user-info">
+                        <h4>Sarah Jenkins</h4>
+                        <span>Club Manager</span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="review-card reveal reveal-delay-3">
+                <div>
+                    <div class="review-date">March 12, 2024</div>
+                    <p class="review-text">"Finally, volleyball nets that don't sag! The tension cables are industrial grade. Highly recommended for tournaments."</p>
+                </div>
+                <div class="user-profile">
+                    <!-- Config ID: review-3-img -->
+                    <div class="avatar" id="review-3-img"></div>
+                    <div class="user-info">
+                        <h4>Carlos Ruiz</h4>
+                        <span>Sports Director</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- PREMIUM NETS BENTO GRID -->
+    <section class="premium-section">
+        <div class="container">
+            <div class="premium-grid">
+                
+                <div class="grid-header reveal">
+                    <span style="font-size: 0.85rem; color: #777; margin-bottom: 5px;">Secure the perimeter</span>
+                    <h2>High Impact<br>Sport Nets<br>Series 2024</h2>
+                    <p style="color: #999; margin-top: 15px; font-size: 0.9rem; line-height: 1.5; max-width: 350px;">Engineered with UV-treated HDPE and Nylon. Whether it's a smash, a serve, or a six—our nets catch it all.</p>
+                </div>
+
+                <!-- Tall Image: Cricket Lane -->
+                <div class="grid-item item-tall reveal reveal-delay-1">
+                    <!-- Config ID: grid-tall-img -->
+                    <img id="grid-tall-img" src="" alt="Cricket Net">
+                    <span>Cricket Lanes</span>
+                </div>
+
+                <!-- Product: Tennis Net -->
+                <div class="grid-item reveal reveal-delay-2">
+                    <p style="color:#000; font-weight:700; font-size:0.8rem; margin-bottom:10px;">PRO TENNIS</p>
+                    <!-- Config ID: grid-item-1 -->
+                    <img id="grid-item-1" src="" alt="Tennis Net">
+                </div>
+
+                <!-- Product: Volleyball Net -->
+                <div class="grid-item reveal reveal-delay-3">
+                    <p style="color:#000; font-weight:700; font-size:0.8rem; margin-bottom:10px;">VOLLEYBALL</p>
+                    <!-- Config ID: grid-item-2 -->
+                    <img id="grid-item-2" src="" alt="Volleyball">
+                </div>
+
+                <!-- Product: Badminton/Misc -->
+                <div class="grid-item reveal reveal-delay-1">
+                    <p style="color:#000; font-weight:700; font-size:0.8rem; margin-bottom:10px;">BADMINTON</p>
+                    <!-- Config ID: grid-item-3 -->
+                    <img id="grid-item-3" src="" alt="Badminton">
+                </div>
+
+                <!-- Link Button -->
+                <div class="grid-item item-dark reveal reveal-delay-2">
+                    <div style="text-align: center;">
+                        <span style="font-size: 2.5rem; display: block; margin-bottom: 5px;">↗</span>
+                        <span>See All Sports</span>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </section>
+
+    <!-- TOURNAMENT GRADE SECTION -->
+    <section class="world-cup-wrapper container">
+        <div class="wc-card reveal">
+            <!-- Background Text -->
+            <div class="wc-bg-text">PRO</div>
+
+            <!-- Content Header -->
+            <div class="wc-content">
+                <div>
+                    <span style="font-size: 0.75rem; text-transform: uppercase; color: #888; letter-spacing: 1px;">Competition Standards</span>
+                    <h3>Tournament<br>Grade</h3>
+                </div>
+                <p>Official dimensions and mesh sizes for ITF, ICC, and FIVB standards. When the game is on the line, trust the net that professionals use.</p>
+            </div>
+
+            <!-- Players -->
+            <div class="wc-players">
+                <!-- Config IDs: wc-player-1, wc-player-2 -->
+                <img id="wc-player-1" class="player-1" src="" alt="Tennis">
+                <img id="wc-player-2" class="player-2" src="" alt="Cricket">
+            </div>
+
+            <!-- Center Badge -->
+            <div class="wc-badge">
+                <h2>Game<br>Ready</h2>
+            </div>
+        </div>
+    </section>
+
+    <!-- BEST SELLERS -->
+    <section class="best-sellers container">
+        <div class="section-header reveal">
+            <div>
+                <span style="font-size:0.8rem; color:#777;">Best Selling Equipment</span>
+                <h2>Field & Court<br>Essentials</h2>
+            </div>
+            <p>From full court setups to replacement parts. We ship worldwide.</p>
+        </div>
+
+        <div class="products-grid">
+            <!-- Item 1: Cricket Net -->
+            <div class="product-card-wrap reveal reveal-delay-1">
+                <div class="product-img-box h-tall">
+                    <!-- Config ID: prod-1 -->
+                    <img id="prod-1" src="" alt="Cricket Gear">
+                    <div style="position:absolute; bottom:10px; right:10px; font-size:0.7rem; color:#aaa;">Practice Net</div>
+                </div>
+                <div class="product-meta">
+                    <div>
+                        <h5>Cricket Cage (30ft)</h5>
+                        <span class="price">$199.00</span>
+                    </div>
+                    <button class="btn-buy">Buy</button>
+                </div>
+            </div>
+
+            <!-- Item 2: Tennis Net -->
+            <div class="product-card-wrap reveal reveal-delay-2">
+                <div class="product-img-box h-medium">
+                    <!-- Config ID: prod-2 -->
+                    <img id="prod-2" src="" alt="Tennis Racket Net">
+                    <div style="position:absolute; bottom:10px; right:10px; font-size:0.7rem; color:#aaa;">Double Top</div>
+                </div>
+                <div class="product-meta">
+                    <div>
+                        <h5>Tour Tennis Net</h5>
+                        <span class="price">$149.00</span>
+                    </div>
+                    <button class="btn-buy">Buy</button>
+                </div>
+            </div>
+
+            <!-- Item 3: Paddle/Volleyball -->
+            <div class="product-card-wrap reveal reveal-delay-3">
+                <div class="product-img-box h-small">
+                    <!-- Config ID: prod-3 -->
+                    <img id="prod-3" src="" alt="Volleyball">
+                    <div style="position:absolute; bottom:10px; right:10px; font-size:0.7rem; color:#aaa;">Steel Cable</div>
+                </div>
+                <div class="product-meta">
+                    <div>
+                        <h5>Volleyball Pro</h5>
+                        <span class="price">$89.99</span>
+                    </div>
+                    <button class="btn-buy">Buy</button>
+                </div>
+            </div>
+
+            <!-- Item 4: Action Shot -->
+            <div class="product-card-wrap reveal reveal-delay-1">
+                <div class="product-img-box h-full">
+                    <!-- Config ID: prod-4 -->
+                    <img id="prod-4" src="" alt="Padel Court">
+                </div>
+                <div class="product-meta">
+                    <div>
+                        <h5>Padel Court Net</h5>
+                        <span class="price">$220.00</span>
+                    </div>
+                    <button class="btn-buy">Buy</button>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- FOOTER -->
+    <footer>
+        <div class="container">
+            <a href="#" class="logo" style="color: #fff; display: block; margin-bottom: 20px;">Cereburum</a>
+            <p>&copy; 2026 Cereburum Inc. Global Supplier of Sport Nets.</p>
+            <div style="margin-top: 20px; font-size: 0.8rem;">
+                <a href="#" style="margin: 0 10px;">Badminton</a> | 
+                <a href="#" style="margin: 0 10px;">Cricket</a> | 
+                <a href="#" style="margin: 0 10px;">Tennis</a> | 
+                <a href="#" style="margin: 0 10px;">Padel</a>
+            </div>
+        </div>
+    </footer>
+
+    <!-- 
+    ========================================================================
+    🔴 IMAGE & GIF CONFIGURATION 🔴
+    REPLACE THE LINKS INSIDE THE QUOTES BELOW TO CHANGE IMAGES
+    ========================================================================
+    -->
+    <script>
+        const config = {
+            // 1. HERO BACKGROUND GIF (Cinematic Stadium/Lights)
+            heroGif: "background.gif",
+
+            // 2. REVIEWS (User Avatars)
+            review1: "https://images.unsplash.com/photo-1556484687-30636164638a?w=100",
+            review2: "https://images.unsplash.com/photo-1542596594-649edbc13630?w=100",
+            review3: "https://images.unsplash.com/photo-1517466787929-bc90951d0974?w=100",
+
+            // 3. PREMIUM GRID IMAGES
+            gridTall: "https://images.unsplash.com/photo-1531415074968-036ba1b575da?q=80&w=1887&auto=format&fit=crop", // Cricket Lane
+            gridItem1: "https://plus.unsplash.com/premium_photo-1664303494371-85e3505886d2?q=80&w=2070&auto=format&fit=crop", // Tennis
+            gridItem2: "https://images.unsplash.com/photo-1523544545175-92e04b96d26b?q=80&w=2070&auto=format&fit=crop", // Volleyball
+            gridItem3: "https://images.unsplash.com/photo-1626224583764-84786c715cd3?q=80&w=2070&auto=format&fit=crop", // Badminton
+
+            // 4. TOURNAMENT PLAYERS (Transparent PNGs preferred)
+            playerLeft: "https://pngimg.com/d/tennis_PNG10408.png",
+            playerRight: "https://pngimg.com/d/cricket_PNG103.png",
+
+            // 5. BEST SELLERS
+            product1: "https://pngimg.com/d/cricket_PNG52.png", // Cricket Cage
+            product2: "https://pngimg.com/d/tennis_PNG10434.png", // Tennis Net
+            product3: "https://pngimg.com/d/volleyball_PNG57.png", // Volleyball
+            product4: "https://images.unsplash.com/photo-1554068865-24cecd4e34b8?q=80&w=2070&auto=format&fit=crop" // Padel Court
+        };
+
+        // --- AUTOMATIC UPDATE SCRIPT (DO NOT EDIT BELOW THIS LINE) ---
+        window.addEventListener('DOMContentLoaded', () => {
+            // Set Hero BG
+            document.getElementById('hero-bg-layer').style.backgroundImage = `url('${config.heroGif}')`;
+            
+            // Set Reviews
+            document.getElementById('review-1-img').style.backgroundImage = `url('${config.review1}')`;
+            document.getElementById('review-2-img').style.backgroundImage = `url('${config.review2}')`;
+            document.getElementById('review-3-img').style.backgroundImage = `url('${config.review3}')`;
+
+            // Set Grid
+            document.getElementById('grid-tall-img').src = config.gridTall;
+            document.getElementById('grid-item-1').src = config.gridItem1;
+            document.getElementById('grid-item-2').src = config.gridItem2;
+            document.getElementById('grid-item-3').src = config.gridItem3;
+
+            // Set Players
+            document.getElementById('wc-player-1').src = config.playerLeft;
+            document.getElementById('wc-player-2').src = config.playerRight;
+
+            // Set Products
+            document.getElementById('prod-1').src = config.product1;
+            document.getElementById('prod-2').src = config.product2;
+            document.getElementById('prod-3').src = config.product3;
+            document.getElementById('prod-4').src = config.product4;
+        });
+
+        // --- SCROLL ANIMATION ---
+        function reveal() {
+            var reveals = document.querySelectorAll(".reveal");
+            for (var i = 0; i < reveals.length; i++) {
+                var windowHeight = window.innerHeight;
+                var elementTop = reveals[i].getBoundingClientRect().top;
+                var elementVisible = 100;
+                if (elementTop < windowHeight - elementVisible) {
+                    reveals[i].classList.add("active");
+                }
+            }
+        }
+        window.addEventListener("scroll", reveal);
+        reveal();
+    </script>
+
+</body>
+</html>
